@@ -1,0 +1,41 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20260902,REURDIDORA # 03,Revientes en peine,20,rotura
+20260902,REURDIDORA # 03,Hilos rotos o picados,18,rotura
+20260902,REURDIDORA # 03,Hilos cruzados,17,rotura
+20260902,REURDIDORA # 03,Hilo debil,14,rotura
+20260902,REURDIDORA # 03,Nudo flojo,4,rotura
+20260902,REURDIDORA # 03,Mona o motas,3,rotura
+20260902,REURDIDORA # 03,Transferencias,3,rotura
+20260902,REURDIDORA # 03,Hilo suelto,2,rotura
+20260902,REURDIDORA # 03,Hilos sobrantes,2,rotura
+20260902,REURDIDORA # 03,Enredo de cinta,17,paro
+20260902,REURDIDORA # 05,Revientes en peine,27,rotura
+20260902,REURDIDORA # 05,Hilo suelto,10,rotura
+20260902,REURDIDORA # 05,Nudo flojo,6,rotura
+20260902,REURDIDORA # 05,Hilos rotos o picados,6,rotura
+20260902,REURDIDORA # 05,Transferencias,4,rotura
+20260902,REURDIDORA # 05,Hilos cruzados,4,rotura
+20260902,REURDIDORA # 05,Hilo debil,2,rotura
+20260902,REURDIDORA # 05,Calzas,37,paro
+20260902,REURDIDORA # 05,Enredo de cinta,27,paro
+20260902,REURDIDORA # 06,Revientes en peine,74,rotura
+20260902,REURDIDORA # 06,Transferencias,56,rotura
+20260902,REURDIDORA # 06,Enredos de cintas,21,rotura
+20260902,REURDIDORA # 06,Hilo suelto,17,rotura
+20260902,REURDIDORA # 06,Hilos rotos o picados,13,rotura
+20260902,REURDIDORA # 06,Hilo debil,11,rotura
+20260902,REURDIDORA # 06,Mona o motas,7,rotura
+20260902,REURDIDORA # 06,Hilos cruzados,2,rotura
+20260902,REURDIDORA # 06,Nudo flojo,1,rotura
+20260902,REURDIDORA # 06,Enredo de cinta,91,paro
+20260902,REURDIDORA # 06,Calzas,75,paro
+20260902,REURDIDORA # 07,Hilo debil,21,rotura
+20260902,REURDIDORA # 07,Hilo suelto,21,rotura
+20260902,REURDIDORA # 07,Hilos rotos o picados,20,rotura
+20260902,REURDIDORA # 07,Transferencias,19,rotura
+20260902,REURDIDORA # 07,Revientes en peine,18,rotura
+20260902,REURDIDORA # 07,Nudo flojo,6,rotura
+20260902,REURDIDORA # 07,Enredos de cintas,2,rotura
+20260902,REURDIDORA # 07,Hilos cruzados,2,rotura
+20260902,REURDIDORA # 07,Calzas,39,paro
+20260902,REURDIDORA # 07,Enredo de cinta,17,paro
