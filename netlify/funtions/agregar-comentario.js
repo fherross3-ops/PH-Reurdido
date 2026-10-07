@@ -43,7 +43,7 @@ export default async (req) => {
 
   // ⚠️ IMPORTANTE: Cambia el owner/repo por los de tu repositorio de REURDIDO
   const owner = 'fherross3-ops';
-  const repo  = 'PH_reurdido';   // ← CAMBIA ESTO por el nombre real de tu repo
+  const repo  = 'PH_Reurdido';   // ← CAMBIA ESTO por el nombre real de tu repo
   const ruta  = 'data/comentarios.csv';
   const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/${ruta}`;
 
