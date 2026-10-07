@@ -1,1 +1,1824 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Reurdido</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    body {
+        background:#0a0e17; color:#e0e6ed; min-height:100vh;
+        display:flex; justify-content:center; align-items:center;
+        padding:12px; overflow:hidden; height:100vh;
+    }
+    .dashboard {
+        max-width:1600px; width:100%; height:98vh; max-height:980px;
+        display:flex; flex-direction:column; gap:8px;
+        background:linear-gradient(145deg,#0f1a2b,#07101a);
+        border-radius:16px; padding:14px 18px 10px;
+        border:1px solid #1e3347;
+        box-shadow:0 8px 40px rgba(0,0,0,.6);
+        overflow:hidden;
+    }
+    .header {
+        display:flex; justify-content:space-between; align-items:center;
+        flex-shrink:0; padding-bottom:8px;
+        border-bottom:1px solid #1e3347; flex-wrap:wrap; gap:8px;
+    }
+    .header-left { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .header h1 {
+        font-size:1.1rem; font-weight:700;
+        background:linear-gradient(90deg,#4fc3f7,#00e676);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        display:flex; align-items:center; gap:8px;
+    }
+    .fecha-destacada {
+        background:#1b3a4b; color:#4fc3f7; padding:3px 14px;
+        border-radius:60px; font-size:.75rem; font-weight:700;
+        -webkit-text-fill-color:#4fc3f7;
+    }
+    .fecha-selector {
+        display:flex; align-items:center; gap:6px;
+        background:#0f1a2b; padding:3px 10px 3px 12px;
+        border-radius:60px; border:1px solid #2a5a7a;
+    }
+    .fecha-selector label { font-size:.7rem; color:#78909c; font-weight:600; }
+    .fecha-selector select {
+        background:#1b3a4b; color:#4fc3f7; border:1px solid #2a5a7a;
+        padding:3px 8px; border-radius:30px; font-size:.75rem;
+        font-weight:700; cursor:pointer; outline:none;
+    }
+    .file-status {
+        font-size:.65rem; color:#90aae4; font-weight:500;
+        background:#0f1a2b; padding:3px 10px; border-radius:60px;
+        border:1px solid #1e3347;
+    }
+    .header-badges { display:flex; gap:6px; flex-wrap:wrap; }
+    .badge-csv {
+        background:#0f1a2b; padding:4px 12px; border-radius:60px;
+        border:1px solid #1e3347; color:#b0bec5; font-size:.7rem; font-weight:600;
+    }
+    .badge-csv span { background:#1b3a4b; padding:1px 8px; border-radius:30px; margin-left:4px; color:#4fc3f7; }
+
+    .tabs-container {
+        display:flex; gap:4px; flex-shrink:0;
+        background:#0f1a2b; padding:4px; border-radius:12px;
+        border:1px solid #1e3347; flex-wrap:wrap;
+    }
+    .tab-btn {
+        padding:6px 16px; border:none; background:transparent;
+        border-radius:8px; font-weight:600; font-size:.75rem;
+        color:#78909c; cursor:pointer; transition:all .2s;
+    }
+    .tab-btn:hover { background:#142230; color:#b0bec5; }
+    .tab-btn.active { background:#1b3a4b; color:#4fc3f7; box-shadow:0 2px 8px rgba(79,195,247,.15); }
+
+    .tab-content { display:none; flex:1; min-height:0; flex-direction:column; gap:8px; }
+    .tab-content.active { display:flex; }
+
+    .kpi-global-8 {
+        display:grid; grid-template-columns:repeat(8,1fr);
+        gap:6px; flex-shrink:0;
+    }
+    .kpi-global { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; flex-shrink:0; }
+    .kpi-card {
+        background:#0f1a2b; padding:8px 12px; border-radius:10px;
+        border:1px solid #1e3347; border-left:3px solid #4fc3f7;
+    }
+    .kpi-card:nth-child(2) { border-left-color:#00e676; }
+    .kpi-card:nth-child(3) { border-left-color:#ffb74d; }
+    .kpi-card:nth-child(4) { border-left-color:#f06292; }
+    .kpi-card:nth-child(5) { border-left-color:#ce93d8; }
+    .kpi-card:nth-child(6) { border-left-color:#4fc3f7; }
+    .kpi-card:nth-child(7) { border-left-color:#00e676; }
+    .kpi-card:nth-child(8) { border-left-color:#ffb74d; }
+    .kpi-label {
+        font-size:.55rem; text-transform:uppercase; letter-spacing:.05em;
+        color:#78909c; font-weight:700;
+    }
+    .kpi-value {
+        font-size:1.3rem; font-weight:700; color:#e0e6ed;
+        line-height:1.2; margin-top:2px;
+    }
+    .kpi-value.blue { color:#4fc3f7; }
+    .kpi-value.green { color:#00e676; }
+    .kpi-value.orange { color:#ffb74d; }
+    .kpi-value.pink { color:#f06292; }
+    .kpi-value.purple { color:#ce93d8; }
+    .kpi-sub { font-size:.55rem; color:#78909c; margin-top:0; }
+
+    .maquinas-grid {
+        display:grid; grid-template-columns:repeat(4, 1fr);
+        gap:10px; flex:1; min-height:0;
+        overflow-y:auto; padding-right:4px;
+    }
+    .maquina-block {
+        background:#0f1a2b; border-radius:12px; padding:12px 14px 10px;
+        border:1px solid #1e3347; display:flex; flex-direction:column;
+        border-top:3px solid #4fc3f7;
+    }
+    .maquina-header {
+        display:flex; justify-content:space-between; align-items:center;
+        flex-shrink:0; margin-bottom:6px;
+    }
+    .maquina-header h3 { font-weight:700; font-size:.8rem; color:#4fc3f7; }
+    .maquina-header .total-badge {
+        background:#1b3a4b; padding:2px 10px; border-radius:30px;
+        font-size:.6rem; font-weight:700; color:#4fc3f7;
+    }
+    .kpi-maquina-grid {
+        display:grid; grid-template-columns:1fr 1fr; gap:2px 10px;
+        font-size:.68rem; padding:2px 0;
+    }
+    .kpi-maquina-item {
+        display:flex; justify-content:space-between;
+        padding:3px 2px; border-bottom:1px solid #142230;
+    }
+    .kpi-maquina-item .label { color:#78909c; font-weight:500; font-size:.62rem; }
+    .kpi-maquina-item .value { font-weight:700; color:#e0e6ed; font-size:.68rem; }
+    .kpi-maquina-item .value.efectividad { color:#00e676; }
+    .kpi-maquina-item .value.tiempo { color:#4fc3f7; }
+    .kpi-maquina-item .value.roturas { color:#f06292; }
+    .kpi-maquina-item .value.paros { color:#ffb74d; }
+
+    .tabla-wrapper {
+        flex:1; overflow:auto; border-radius:10px;
+        border:1px solid #1e3347; background:#0a121c;
+    }
+    .tabla-wrapper table { width:100%; border-collapse:collapse; font-size:.75rem; min-width:900px; }
+    .tabla-wrapper th {
+        background:#0f1a2b; color:#78909c; font-weight:700;
+        padding:8px 10px; text-align:center;
+        border-bottom:2px solid #1e3347; position:sticky; top:0; z-index:10;
+        font-size:.65rem; text-transform:uppercase; letter-spacing:.03em;
+    }
+    .tabla-wrapper td {
+        padding:6px 10px; text-align:center;
+        border-bottom:1px solid #142230; color:#b0bec5; font-size:.75rem;
+    }
+    .tabla-wrapper tr:hover td { background:#142230; }
+    .tabla-wrapper .total-row { background:#0f1a2b !important; font-weight:700; }
+    .tabla-wrapper .total-row td { border-top:2px solid #1e3347; border-bottom:2px solid #1e3347; color:#e0e6ed; }
+    .tabla-wrapper .nombre-col { font-weight:600; color:#4fc3f7; text-align:left; }
+    .tabla-wrapper .maquina-col { text-align:left; font-weight:500; color:#90aae4; }
+
+    .estado-badge {
+        display:inline-block; padding:2px 10px; border-radius:30px;
+        font-size:.65rem; font-weight:700; text-transform:uppercase;
+        letter-spacing:.03em;
+    }
+    .estado-badge.pendiente { background:#3a2f1a; color:#ffb74d; }
+    .estado-badge.parcial   { background:#3a2f1a; color:#ffb74d; }
+    .estado-badge.completo  { background:#1b3a2b; color:#00e676; }
+    .estado-badge.excedido  { background:#1b2a3a; color:#4fc3f7; }
+
+    .barra-avance { display:inline-block; height:6px; border-radius:3px; background:#4fc3f7; vertical-align:middle; width:0; transition: width .3s; }
+    .barra-wrapper { display:flex; align-items:center; gap:6px; }
+    .barra-wrapper .barra-track { flex:1; height:6px; border-radius:3px; background:#142230; overflow:hidden; }
+
+    .roturas-grid {
+        display:grid; grid-template-columns:repeat(4, 1fr);
+        gap:10px; flex:1; min-height:0;
+        overflow-y:auto; padding-right:4px;
+    }
+    .rotura-block {
+        background:#0f1a2b; border-radius:12px; padding:12px 14px 10px;
+        border:1px solid #1e3347; display:flex; flex-direction:column;
+        border-top:3px solid #4fc3f7;
+    }
+    .rotura-header {
+        display:flex; justify-content:space-between; align-items:center;
+        flex-shrink:0; margin-bottom:6px;
+    }
+    .rotura-header h3 { font-weight:700; font-size:.8rem; color:#4fc3f7; }
+    .rotura-header .total-badge {
+        background:#1b3a4b; padding:2px 10px; border-radius:30px;
+        font-size:.65rem; font-weight:700; color:#4fc3f7;
+    }
+    .rotura-detalle-wrap { flex:1; overflow:auto; margin-top:2px; }
+    .rotura-detalle-wrap table { width:100%; border-collapse:collapse; font-size:.72rem; }
+    .rotura-detalle-wrap th {
+        text-align:left; padding:4px 4px 4px 0; font-weight:700;
+        color:#90aae4; border-bottom:1px solid #1e3347;
+        font-size:.6rem; text-transform:uppercase;
+    }
+    .rotura-detalle-wrap td {
+        padding:4px 4px 4px 0; border-bottom:1px solid #142230;
+        color:#b0bec5; font-size:.72rem;
+    }
+    .porcentaje-bar {
+        display:inline-block; height:5px; border-radius:3px;
+        background:#4fc3f7; margin-right:4px; vertical-align:middle;
+    }
+    .porcentaje-text { font-weight:600; color:#90aae4; font-size:.65rem; }
+    .categoria-badge {
+        display:inline-block; padding:1px 6px; border-radius:3px;
+        font-size:.55rem; font-weight:700; text-transform:uppercase;
+    }
+    .categoria-badge.rotura { background:#3a0f1a; color:#f06292; }
+    .categoria-badge.paro { background:#3a2f1a; color:#ffb74d; }
+    .sin-datos-msg { text-align:center; color:#78909c; font-size:.75rem; padding:20px 0; font-weight:500; }
+
+    .loading-overlay {
+        position:fixed; top:0; left:0; right:0; bottom:0;
+        background:rgba(10,14,23,.92);
+        display:flex; justify-content:center; align-items:center;
+        flex-direction:column; gap:14px; z-index:9999;
+    }
+    .loading-overlay.hidden { display:none; }
+    .loading-spinner {
+        width:44px; height:44px;
+        border:4px solid #1e3347; border-top-color:#4fc3f7;
+        border-radius:50%; animation:spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loading-text { color:#4fc3f7; font-weight:700; font-size:.9rem; }
+    .loading-sub { color:#78909c; font-size:.75rem; }
+
+    .error-panel {
+        background:#3a0f1a; border:1px solid #f06292;
+        border-radius:10px; padding:12px 16px;
+        color:#f06292; font-size:.8rem; margin-bottom:8px;
+        display:none;
+    }
+    .error-panel.visible { display:block; }
+    .error-panel ul { margin-left:18px; margin-top:6px; }
+    .error-panel li { margin-bottom:3px; color:#f8b0c0; }
+
+    /* ===== COMENTARIOS ===== */
+    .com-lista { flex:1; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:8px; }
+    .com-vacio { text-align:center; color:#78909c; font-size:.75rem; padding:20px 0; font-style:italic; }
+    .com-item {
+        background:#0f1a2b; border:1px solid #1e3347; border-left:3px solid #4fc3f7;
+        border-radius:8px; padding:10px 12px;
+    }
+    .com-item-header {
+        display:flex; justify-content:space-between; align-items:center;
+        flex-wrap:wrap; gap:4px; margin-bottom:6px;
+    }
+    .com-item-meta { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+    .com-cat {
+        background:#1b3a4b; color:#4fc3f7; padding:1px 8px;
+        border-radius:30px; font-size:.6rem; font-weight:700; text-transform:uppercase;
+    }
+    .com-maq { background:#3a2f1a; color:#ffb74d; padding:1px 8px; border-radius:30px; font-size:.6rem; font-weight:600; }
+    .com-nombre { font-size:.75rem; font-weight:700; color:#4fc3f7; }
+    .com-fecha { font-size:.65rem; color:#78909c; }
+    .com-texto { font-size:.75rem; color:#b0bec5; line-height:1.4; word-break:break-word; }
+
+    .com-block {
+        background:#0f1a2b; border-radius:12px; padding:14px 16px;
+        border:1px solid #1e3347; border-top:3px solid #4fc3f7;
+        display:flex; flex-direction:column; min-height:0; overflow:hidden;
+    }
+    .com-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-shrink:0; }
+    .com-header h3 { font-weight:700; font-size:.85rem; color:#4fc3f7; }
+    .com-badge { background:#1b3a4b; padding:2px 10px; border-radius:30px; font-size:.65rem; font-weight:700; color:#4fc3f7; }
+    .com-form { display:flex; flex-direction:column; gap:8px; flex:1; overflow-y:auto; padding-right:4px; }
+    .com-row { display:flex; flex-direction:column; gap:4px; }
+    .com-row label { font-size:.7rem; font-weight:600; color:#90aae4; }
+    .com-row input, .com-row select, .com-row textarea {
+        padding:7px 10px; border:1px solid #1e3347; border-radius:6px;
+        font-size:.75rem; font-family:inherit; color:#e0e6ed;
+        background:#0a121c; outline:none; resize:vertical;
+    }
+    .com-row input:focus, .com-row select:focus, .com-row textarea:focus {
+        border-color:#4fc3f7;
+        box-shadow:0 0 0 3px rgba(79,195,247,.15);
+    }
+    .com-row textarea { min-height:70px; }
+    .com-char-count { font-size:.6rem; color:#78909c; text-align:right; }
+    .com-actions { display:flex; align-items:center; gap:10px; margin-top:4px; flex-wrap:wrap; }
+    .com-btn {
+        padding:8px 18px; border-radius:8px; border:1px solid #2a5a7a;
+        background:#1b3a4b; color:#4fc3f7; font-weight:700;
+        font-size:.75rem; cursor:pointer; transition:all .2s;
+    }
+    .com-btn.primary { background:#1b3a4b; color:#4fc3f7; }
+    .com-btn.primary:hover { background:#2a5a7a; color:#e0f7ff; }
+    .com-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .com-estado { font-size:.7rem; color:#90aae4; font-weight:500; }
+
+    .com-filtros { display:flex; gap:6px; margin-bottom:8px; flex-shrink:0; }
+    .com-filtro {
+        padding:6px 10px; border:1px solid #1e3347; border-radius:6px;
+        font-size:.7rem; background:#0a121c; color:#e0e6ed; outline:none;
+        font-family:inherit;
+    }
+    .com-filtro:focus { border-color:#4fc3f7; }
+    #comFiltroCat { min-width:140px; }
+    #comBuscar { flex:1; }
+    .com-btn-clear {
+        background:#0a121c; border:1px solid #1e3347; border-radius:6px;
+        padding:6px 12px; cursor:pointer; font-size:.75rem; color:#78909c;
+    }
+    .com-btn-clear:hover { background:#3a0f1a; color:#f06292; border-color:#f06292; }
+
+    .com-hint {
+        font-size:.6rem; color:#78909c; margin-top:2px; line-height:1.3;
+    }
+    .com-row input[type="date"] {
+        padding:7px 10px; border:1px solid #1e3347; border-radius:6px;
+        font-size:.75rem; font-family:inherit; color:#e0e6ed;
+        background:#0a121c; outline:none; transition:border .2s;
+        color-scheme: dark;
+    }
+    .com-row input[type="date"]:focus {
+        border-color:#4fc3f7;
+        box-shadow:0 0 0 3px rgba(79,195,247,.15);
+    }
+
+    @media (max-width:1400px) {
+        .kpi-global-8 { grid-template-columns:repeat(4,1fr); }
+        .maquinas-grid, .roturas-grid { grid-template-columns:repeat(2, 1fr); }
+    }
+
+    /* ===== CONFIGURACIÓN ===== */
+    .config-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 12px;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+    }
+    .config-block {
+        background: #0f1a2b;
+        border-radius: 12px;
+        padding: 16px 20px;
+        border: 1px solid #1e3347;
+        border-top: 3px solid #4fc3f7;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .config-block:nth-child(2) { border-top-color: #00e676; }
+    .config-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .config-header h3 { font-weight: 700; font-size: .9rem; color: #4fc3f7; }
+    .config-badge {
+        background: #1b3a4b; padding: 2px 10px;
+        border-radius: 30px; font-size: .65rem; font-weight: 700; color: #4fc3f7;
+    }
+    .config-item {
+        display: grid; grid-template-columns: 1fr 140px;
+        align-items: center; gap: 10px; padding: 8px 0;
+        border-bottom: 1px solid #142230;
+    }
+    .config-item:last-child { border-bottom: none; }
+    .config-item label { font-size: .75rem; font-weight: 600; color: #90aae4; }
+    .config-item input {
+        padding: 7px 10px; border: 1px solid #1e3347; border-radius: 6px;
+        font-size: .75rem; font-weight: 600; color: #e0e6ed;
+        text-align: right; background: #0a121c; outline: none;
+        transition: border .2s; font-family: inherit;
+    }
+    .config-item input:focus {
+        border-color: #4fc3f7;
+        box-shadow: 0 0 0 3px rgba(79,195,247,.15);
+    }
+    .config-hint {
+        grid-column: 1 / -1; font-size: .6rem; color: #78909c; margin-top: -4px;
+    }
+    .config-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .config-btn {
+        padding: 9px 14px; border-radius: 8px; border: 1px solid #2a5a7a;
+        background: #1b3a4b; color: #4fc3f7; font-weight: 700;
+        font-size: .75rem; cursor: pointer; transition: all .2s;
+        text-align: left; font-family: inherit;
+    }
+    .config-btn:hover { background: #2a5a7a; color: #e0f7ff; }
+    .config-btn.primary { background: #1b3a4b; color: #4fc3f7; border-color: #4fc3f7; }
+    .config-btn.primary:hover { background: #2a5a7a; }
+    .config-info {
+        margin-top: 12px; padding: 10px 12px; background: #0a121c;
+        border-radius: 8px; font-size: .65rem; color: #90aae4; line-height: 1.5;
+    }
+    .config-info code {
+        background: #1b3a4b; padding: 1px 5px; border-radius: 3px;
+        font-size: .6rem; color: #4fc3f7;
+    }
+    .config-toast {
+        position: fixed; bottom: 20px; right: 20px;
+        background: #1b3a4b; color: #4fc3f7; border: 1px solid #4fc3f7;
+        padding: 12px 22px; border-radius: 8px;
+        font-size: .8rem; font-weight: 700;
+        box-shadow: 0 4px 20px rgba(0,0,0,.4);
+        opacity: 0; transform: translateY(20px);
+        transition: all .3s; z-index: 10000;
+    }
+    .config-toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+        .config-grid { grid-template-columns: 1fr; }
+        .config-item { grid-template-columns: 1fr; }
+        .config-item input { width: 100%; text-align: left; }
+    }
+
+    @media (max-width:900px) {
+        body { overflow-y:auto !important; height:auto !important; align-items:flex-start !important; }
+        .dashboard { height:auto !important; max-height:none !important; }
+        .kpi-global-8 { grid-template-columns:repeat(2,1fr); }
+        .kpi-global { grid-template-columns:repeat(2,1fr); }
+        .maquinas-grid, .roturas-grid { grid-template-columns:1fr; }
+        .header { flex-direction:column; align-items:stretch; }
+        .header-left { flex-wrap:wrap; }
+    }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText">Iniciando dashboard…</div>
+    <div class="loading-sub" id="loadingSub">Buscando fechas disponibles…</div>
+</div>
+
+<div class="dashboard">
+    <div class="header">
+        <div class="header-left">
+            <h1>📊 REURDIDO <span class="fecha-destacada" id="fechaMostrada">—</span></h1>
+            <div class="fecha-selector">
+                <label for="fechaSelect">📅 Fecha:</label>
+                <select id="fechaSelect"><option value="">Cargando…</option></select>
+            </div>
+            <span class="file-status" id="fileStatus">Iniciando…</span>
+        </div>
+        <div class="header-badges">
+            <div class="badge-csv">📁 Datos <span id="totalRegistros">0</span> reg</div>
+            <div class="badge-csv">💬 <span id="badgeComCount">0</span> comentarios</div>
+        </div>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" data-tab="maquina">🏭 Máquina</button>
+        <button class="tab-btn" data-tab="operador">👤 Operador</button>
+        <button class="tab-btn" data-tab="titulo">📌 Estilo</button>
+        <button class="tab-btn" data-tab="lote">📦 Lote</button>
+        <button class="tab-btn" data-tab="roturas">🔧 Roturas y Paros</button>
+        <button class="tab-btn" data-tab="tiempos">⏱️ Tiempos</button>
+        <button class="tab-btn" data-tab="config">⚙️ Configuración</button>
+        <button class="tab-btn" data-tab="comentarios">💬 Comentarios</button>
+    </div>
+
+    <!-- TAB MÁQUINA -->
+    <div class="tab-content active" id="tab-maquina">
+        <div class="error-panel" id="errorPanel"></div>
+        <div class="kpi-global-8">
+            <div class="kpi-card"><div class="kpi-label">Mts Producidos</div><div class="kpi-value blue" id="kpiProdMts">-</div><div class="kpi-sub">total día</div></div>
+            <div class="kpi-card"><div class="kpi-label">Mts Esperados</div><div class="kpi-value" id="kpiEspMts">-</div><div class="kpi-sub">8 × 409,150</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos</div><div class="kpi-value green" id="kpiProdTachos">-</div><div class="kpi-sub">producidos</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos Esp.</div><div class="kpi-value orange" id="kpiEspTachos">-</div><div class="kpi-sub">8 × 24.5</div></div>
+            <div class="kpi-card"><div class="kpi-label">% Efectividad</div><div class="kpi-value purple" id="kpiEfectividad">-</div><div class="kpi-sub">global</div></div>
+            <div class="kpi-card"><div class="kpi-label">T. Productivo</div><div class="kpi-value blue" id="kpiTiempoGlobal">-</div><div class="kpi-sub">HH:MM · unión</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos/Hora</div><div class="kpi-value green" id="kpiTachosHora">-</div><div class="kpi-sub">global</div></div>
+            <div class="kpi-card"><div class="kpi-label">Roturas Totales</div><div class="kpi-value pink" id="kpiRoturasGlobal">-</div><div class="kpi-sub">+ paros</div></div>
+        </div>
+        <div class="maquinas-grid" id="maquinaGrid"></div>
+    </div>
+
+    <!-- TAB OPERADOR -->
+    <div class="tab-content" id="tab-operador">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Mts Producidos</div><div class="kpi-value blue" id="kpiOpProdMts">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos</div><div class="kpi-value green" id="kpiOpTachos">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">% Efectividad</div><div class="kpi-value purple" id="kpiOpEfectividad">-</div><div class="kpi-sub">promedio</div></div>
+            <div class="kpi-card"><div class="kpi-label">T. Productivo</div><div class="kpi-value blue" id="kpiOpTiempo">-</div><div class="kpi-sub">unión por operario</div></div>
+        </div>
+        <div class="tabla-wrapper"><table id="tablaOperador"><thead><tr>
+            <th style="text-align:left;min-width:140px;">Operario</th>
+            <th style="text-align:left;min-width:100px;">Máquina</th>
+            <th>Turno</th>
+            <th>Mts Prod</th>
+            <th>Tachos</th>
+            <th>% Efectividad</th>
+            <th>Roturas</th>
+            <th>IRMM</th>
+            <th>Tiempo</th>
+        </tr></thead><tbody id="tbodyOperador"></tbody></table></div>
+    </div>
+
+    <!-- TAB ESTILO -->
+    <div class="tab-content" id="tab-titulo">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Mts Producidos</div><div class="kpi-value blue" id="kpiTitProdMts">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos</div><div class="kpi-value green" id="kpiTitTachos">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">Roturas</div><div class="kpi-value pink" id="kpiTitRoturas">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">IRMM</div><div class="kpi-value orange" id="kpiTitIRMM">-</div><div class="kpi-sub">ponderado</div></div>
+        </div>
+        <div class="tabla-wrapper"><table id="tablaTitulo"><thead><tr>
+            <th style="text-align:left;min-width:120px;">Estilo</th>
+            <th>Hilo</th>
+            <th>Mts Prod</th>
+            <th>Tachos</th>
+            <th>% Efectividad</th>
+            <th>Roturas</th>
+            <th>IRMM</th>
+            <th>Tiempo</th>
+        </tr></thead><tbody id="tbodyTitulo"></tbody></table></div>
+    </div>
+
+    <!-- TAB LOTE -->
+    <div class="tab-content" id="tab-lote">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Mts Producidos</div><div class="kpi-value blue" id="kpiLoteProdMts">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos</div><div class="kpi-value green" id="kpiLoteTachos">-</div><div class="kpi-sub">total</div></div>
+            <div class="kpi-card"><div class="kpi-label">Lotes</div><div class="kpi-value orange" id="kpiLoteTotal">-</div><div class="kpi-sub">distintos</div></div>
+            <div class="kpi-card"><div class="kpi-label">% Efectividad</div><div class="kpi-value purple" id="kpiLoteEfectividad">-</div><div class="kpi-sub">global</div></div>
+        </div>
+        <div class="tabla-wrapper">
+            <table id="tablaLote">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;min-width:90px;">Lote</th>
+                        <th style="text-align:left;min-width:110px;">Estilo</th>
+                        <th>Hilo</th>
+                        <th>Máquina(s)</th>
+                        <th>Turnos</th>
+                        <th style="text-align:left;min-width:130px;">Operarios</th>
+                        <th>Mts Prod</th>
+                        <th>Tachos</th>
+                        <th>% Efectividad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyLote"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB ROTURAS -->
+    <div class="tab-content" id="tab-roturas">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Total Roturas</div><div class="kpi-value pink" id="kpiTotalRoturas">-</div><div class="kpi-sub">+ paros</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tipos</div><div class="kpi-value blue" id="kpiTipos">-</div><div class="kpi-sub">distintos</div></div>
+            <div class="kpi-card"><div class="kpi-label">Máquinas</div><div class="kpi-value green" id="kpiMaquinas">-</div><div class="kpi-sub">activas</div></div>
+            <div class="kpi-card"><div class="kpi-label">Top Rotura</div><div class="kpi-value orange" id="kpiTopTipo" style="font-size:.85rem;">-</div><div class="kpi-sub" id="kpiTopCantidad"></div></div>
+        </div>
+        <div class="roturas-grid" id="roturasGrid"></div>
+    </div>
+
+    <!-- TAB TIEMPOS -->
+    <div class="tab-content" id="tab-tiempos">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Total Horas</div><div class="kpi-value pink" id="kpiTpTotalHorasTab">-</div><div class="kpi-sub">perdidas</div></div>
+            <div class="kpi-card"><div class="kpi-label">% Pérdida Prom.</div><div class="kpi-value orange" id="kpiTpPctPromedio">-</div><div class="kpi-sub">sobre turno</div></div>
+            <div class="kpi-card"><div class="kpi-label">Causas</div><div class="kpi-value blue" id="kpiTpCausas">-</div><div class="kpi-sub">distintas</div></div>
+            <div class="kpi-card"><div class="kpi-label">Causa Top</div><div class="kpi-value pink" id="kpiTpTopCausa" style="font-size:.85rem;">-</div><div class="kpi-sub" id="kpiTpTopCausaCant"></div></div>
+        </div>
+        <div class="roturas-grid" id="tiemposGrid"></div>
+    </div>
+
+    <!-- TAB CONFIGURACIÓN -->
+    <div class="tab-content" id="tab-config">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Estado actual</div><div class="kpi-value" id="cfgEstado" style="font-size:.95rem;">Por defecto</div><div class="kpi-sub">constantes en uso</div></div>
+            <div class="kpi-card"><div class="kpi-label">Última modificación</div><div class="kpi-value" id="cfgFechaMod" style="font-size:.95rem;">-</div><div class="kpi-sub">localStorage</div></div>
+            <div class="kpi-card"><div class="kpi-label">Mts / Tacho</div><div class="kpi-value blue" id="cfgValMts">-</div><div class="kpi-sub">unidad base</div></div>
+            <div class="kpi-card"><div class="kpi-label">Tachos / Máquina</div><div class="kpi-value orange" id="cfgValTachos">-</div><div class="kpi-sub">por día</div></div>
+        </div>
+        <div class="config-grid">
+            <div class="config-block">
+                <div class="config-header">
+                    <h3>⚙️ Constantes de Producción</h3>
+                    <span class="config-badge" id="cfgBadgeProd">Editable</span>
+                </div>
+                <div class="config-item">
+                    <label for="cfgMtsPorTacho">Metros por tacho</label>
+                    <input type="number" id="cfgMtsPorTacho" min="1" step="1">
+                    <span class="config-hint">Valor por defecto: 16700</span>
+                </div>
+                <div class="config-item">
+                    <label for="cfgMtsEsperados">Mts esperados por máquina</label>
+                    <input type="number" id="cfgMtsEsperados" min="1" step="1">
+                    <span class="config-hint">Valor por defecto: 409150</span>
+                </div>
+                <div class="config-item">
+                    <label for="cfgTachosEsperados">Tachos esperados por máquina</label>
+                    <input type="number" id="cfgTachosEsperados" min="0.1" step="0.1">
+                    <span class="config-hint">Valor por defecto: 24.5</span>
+                </div>
+                <div class="config-item">
+                    <label for="cfgNumMaquinas">Cantidad de máquinas</label>
+                    <input type="number" id="cfgNumMaquinas" min="1" step="1">
+                    <span class="config-hint">Valor por defecto: 8</span>
+                </div>
+                <div class="config-item">
+                    <label for="cfgHorasDia">Horas por día</label>
+                    <input type="number" id="cfgHorasDia" min="1" step="1">
+                    <span class="config-hint">Valor por defecto: 24</span>
+                </div>
+            </div>
+            <div class="config-block">
+                <div class="config-header">
+                    <h3>💾 Acciones</h3>
+                    <span class="config-badge">localStorage</span>
+                </div>
+                <div class="config-actions">
+                    <button class="config-btn primary" id="cfgGuardar">💾 Guardar y aplicar</button>
+                    <button class="config-btn" id="cfgRestaurar">♻️ Restaurar por defecto</button>
+                    <button class="config-btn" id="cfgExportar">📤 Exportar JSON</button>
+                    <button class="config-btn" id="cfgImportar">📥 Importar JSON</button>
+                    <input type="file" id="cfgImportarFile" accept=".json" style="display:none;">
+                </div>
+                <div class="config-info">
+                    <p>💡 Los cambios se guardan en <strong>este navegador</strong>. No afectan a otros usuarios ni al repo de GitHub.</p>
+                    <p style="margin-top:6px;">📌 Para que un cambio sea permanente para todos, edita <code>index.html</code> y cambia los valores en <code>DEFAULTS</code>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB COMENTARIOS -->
+    <div class="tab-content" id="tab-comentarios">
+        <div class="kpi-global">
+            <div class="kpi-card"><div class="kpi-label">Comentarios hoy</div><div class="kpi-value blue" id="kpiComHoy">-</div><div class="kpi-sub">en esta fecha</div></div>
+            <div class="kpi-card"><div class="kpi-label">Total histórico</div><div class="kpi-value" id="kpiComTotal">-</div><div class="kpi-sub">todos</div></div>
+            <div class="kpi-card"><div class="kpi-label">Categoría top</div><div class="kpi-value orange" id="kpiComTopCat" style="font-size:.9rem;">-</div><div class="kpi-sub">del día</div></div>
+            <div class="kpi-card"><div class="kpi-label">Último</div><div class="kpi-value blue" id="kpiComUltimo" style="font-size:.8rem;">-</div><div class="kpi-sub" id="kpiComUltimoSub"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:10px;flex:1;min-height:0;">
+            <div class="com-block">
+                <div class="com-header"><h3>✍️ Nuevo comentario</h3><span class="com-badge" id="comFechaBadge">-</span></div>
+                <form id="formComentario" class="com-form">
+                    <div class="com-row"><label for="comNombre">👤 Nombre (opcional)</label><input type="text" id="comNombre" maxlength="50" placeholder="Anónimo"></div>
+                    <div class="com-row"><label for="comCategoria">🏷️ Categoría</label>
+                        <select id="comCategoria">
+                            <option value="Producción">Producción</option>
+                            <option value="Calidad">Calidad</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                            <option value="Planificación">Planificación</option>
+                            <option value="Operario">Operario</option>
+                            <option value="Máquina">Máquina</option>
+                            <option value="Lote">Lote</option>
+                            <option value="Estilo">Estilo</option>
+                            <option value="General" selected>General</option>
+                        </select>
+                    </div>
+                    <div class="com-row"><label for="comMaquina">🏭 Máquina (opcional)</label>
+                        <select id="comMaquina">
+                            <option value="">— Ninguna —</option>
+                            <option value="REURDIDORA # 01">REURDIDORA # 01</option>
+                            <option value="REURDIDORA # 02">REURDIDORA # 02</option>
+                            <option value="REURDIDORA # 03">REURDIDORA # 03</option>
+                            <option value="REURDIDORA # 04">REURDIDORA # 04</option>
+                            <option value="REURDIDORA # 05">REURDIDORA # 05</option>
+                            <option value="REURDIDORA # 06">REURDIDORA # 06</option>
+                            <option value="REURDIDORA # 07">REURDIDORA # 07</option>
+                            <option value="REURDIDORA # 08">REURDIDORA # 08</option>
+                        </select>
+                    </div>
+                    <div class="com-row"><label for="comFecha">📅 Fecha del evento</label>
+                        <input type="date" id="comFecha" required>
+                        <span class="com-hint">Por defecto: la fecha mostrada. Cámbiala si el evento es de otro día.</span>
+                    </div>
+                    <div class="com-row"><label for="comTexto">💬 Comentario *</label>
+                        <textarea id="comTexto" rows="4" maxlength="500" required placeholder="Describe el evento..."></textarea>
+                        <div class="com-char-count"><span id="comCharCount">0</span>/500</div>
+                    </div>
+                    <div class="com-actions">
+                        <button type="submit" class="com-btn primary" id="comEnviar">📤 Publicar</button>
+                        <span class="com-estado" id="comEstado"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="com-block">
+                <div class="com-header"><h3>📋 Comentarios registrados</h3><span class="com-badge" id="comCountBadge">0</span></div>
+                <div class="com-filtros">
+                    <select id="comFiltroCat" class="com-filtro">
+                        <option value="">Todas las categorías</option>
+                        <option value="Producción">Producción</option>
+                        <option value="Calidad">Calidad</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                        <option value="Planificación">Planificación</option>
+                        <option value="Operario">Operario</option>
+                        <option value="Máquina">Máquina</option>
+                        <option value="Lote">Lote</option>
+                        <option value="Estilo">Estilo</option>
+                        <option value="General">General</option>
+                    </select>
+                    <input type="text" id="comBuscar" class="com-filtro" placeholder="🔍 Buscar...">
+                    <button type="button" class="com-btn-clear" id="comLimpiarFiltros">✕</button>
+                </div>
+                <div class="com-lista" id="comLista"><p class="com-vacio">Cargando comentarios…</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const DATA_PATH = 'data/';
+const PREFIJO_PRODUCCION = 'reurdido_';
+const PREFIJO_ROTURAS    = 'roturas_';
+const PREFIJO_TIEMPOS    = 'tiempos_perdidos_';
+const EXT = '.csv';
+const DIAS_HACIA_ATRAS = 120;
+
+const COMENTARIOS_CSV = 'data/comentarios.csv';
+const API_COMENTARIO = '/api/comentario';
+
+const DEFAULTS = {
+    mtsPorTacho: 16700,
+    mtsEsperados: 409150,
+    tachosEsperados: 24.5,
+    numMaquinas: 8,
+    horasDia: 24,
+};
+
+let METROS_POR_TACHO = DEFAULTS.mtsPorTacho;
+let METROS_ESPERADOS = DEFAULTS.mtsEsperados;
+let TACHOS_ESPERADOS = DEFAULTS.tachosEsperados;
+let NUM_MAQUINAS = DEFAULTS.numMaquinas;
+let HORAS_DIA = DEFAULTS.horasDia;
+
+const STORAGE_KEY = 'reurdido_config_v1';
+const MAX_DURACION_MIN = HORAS_DIA * 60;
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let produccionRaw = [];
+let roturasData = [];
+let tiemposData = [];
+let produccionData = [];
+let fechasDisponibles = [];
+let comentariosCache = [];
+let comentariosCargados = false;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = id => document.getElementById(id);
+
+function formatearFecha(f) {
+    if (!f || f.length !== 8) return f;
+    return f.slice(6,8)+'/'+f.slice(4,6)+'/'+f.slice(0,4);
+}
+
+function fechaAString(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const dia = String(d.getDate()).padStart(2,'0');
+    return `${y}${m}${dia}`;
+}
+
+function fechaParaInput(fechaYYYYMMDD) {
+    if (!fechaYYYYMMDD || fechaYYYYMMDD.length !== 8) return '';
+    return `${fechaYYYYMMDD.slice(0,4)}-${fechaYYYYMMDD.slice(4,6)}-${fechaYYYYMMDD.slice(6,8)}`;
+}
+
+function inputParaFecha(iso) {
+    if (!iso) return '';
+    return iso.replace(/-/g, '');
+}
+
+function detectarSeparador(linea) {
+    const nSemi = (linea.match(/;/g)||[]).length;
+    const nComa = (linea.match(/,/g)||[]).length;
+    return nSemi > nComa ? ';' : ',';
+}
+
+/* ============================================================
+   PARSER CSV
+   ============================================================ */
+function parseCSV(text) {
+    if (!text) return [];
+    text = text.replace(/^\uFEFF+/, '');
+    let lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+    if (lines.length < 2) return [];
+    const delim = detectarSeparador(lines[0]);
+
+    const parseLinea = (linea) => {
+        const out = [];
+        let cur = '', inQ = false;
+        for (let i = 0; i < linea.length; i++) {
+            const c = linea[i];
+            if (inQ) {
+                if (c === '"') {
+                    if (linea[i+1] === '"') { cur += '"'; i++; }
+                    else inQ = false;
+                } else cur += c;
+            } else {
+                if (c === '"') inQ = true;
+                else if (c === delim) { out.push(cur); cur = ''; }
+                else cur += c;
+            }
+        }
+        out.push(cur);
+        return out.map(v => v.trim().replace(/^\uFEFF+/, ''));
+    };
+
+    const headers = parseLinea(lines[0]);
+    const result = [];
+    for (let i = 1; i < lines.length; i++) {
+        const vals = parseLinea(lines[i]);
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = vals[idx] ?? ''; });
+        result.push(obj);
+    }
+    return result;
+}
+
+function num(v) {
+    if (v === null || v === undefined) return 0;
+    if (typeof v === 'number') return v;
+    const s = String(v).trim().replace(',', '.');
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+}
+
+function fechaDesdeYYYYMMDD(s) {
+    if (!s || s.length !== 8) return null;
+    return new Date(parseInt(s.slice(0,4)), parseInt(s.slice(4,6))-1, parseInt(s.slice(6,8)));
+}
+
+function fechaCortaAObj(s) {
+    if (!s) return null;
+    const p = s.split('/');
+    if (p.length !== 3) return null;
+    const dia = parseInt(p[0]), mes = parseInt(p[1])-1;
+    let anio = parseInt(p[2]);
+    if (anio < 100) anio += 2000;
+    return new Date(anio, mes, dia);
+}
+
+/* ============================================================
+   NORMALIZACIÓN DE DURACIÓN
+   ============================================================ */
+function normalizarIntervalo(fechaInicioYYYYMMDD, horaInicio, fechaFinCorta, horaFin) {
+    const fIni = fechaDesdeYYYYMMDD(fechaInicioYYYYMMDD);
+    const fFin = fechaCortaAObj(fechaFinCorta);
+    if (!fIni || !fFin) {
+        return { ini: null, fin: null, min: 0 };
+    }
+    const [hI, mI] = (horaInicio||'00:00').split(':').map(Number);
+    const [hF, mF] = (horaFin||'00:00').split(':').map(Number);
+    const dIni = new Date(fIni.getFullYear(), fIni.getMonth(), fIni.getDate(), hI||0, mI||0);
+    let dFin = new Date(fFin.getFullYear(), fFin.getMonth(), fFin.getDate(), hF||0, mF||0);
+    let min = Math.round((dFin - dIni) / 60000);
+    if (min < 0) return { ini: dIni, fin: dIni, min: 0 };
+    if (min > MAX_DURACION_MIN) {
+        const dFinAlt = new Date(dFin);
+        dFinAlt.setDate(dFinAlt.getDate() - 1);
+        const minAlt = Math.round((dFinAlt - dIni) / 60000);
+        if (minAlt >= 0 && minAlt <= MAX_DURACION_MIN) {
+            dFin = dFinAlt;
+            min = minAlt;
+        } else {
+            min = MAX_DURACION_MIN;
+        }
+    }
+    return { ini: dIni, fin: dFin, min };
+}
+
+function calcularIntervaloUnion(intervalos) {
+    if (!intervalos.length) return { totalMin: 0 };
+    const ordenados = [...intervalos].sort((a, b) => a.ini - b.ini);
+    let ini = ordenados[0].ini;
+    let fin = ordenados[0].fin;
+    let totalMin = 0;
+    for (let i = 1; i < ordenados.length; i++) {
+        const it = ordenados[i];
+        if (it.ini <= fin) {
+            fin = new Date(Math.max(fin.getTime(), it.fin.getTime()));
+        } else {
+            totalMin += Math.round((fin - ini) / 60000);
+            ini = it.ini;
+            fin = it.fin;
+        }
+    }
+    totalMin += Math.round((fin - ini) / 60000);
+    return { totalMin };
+}
+
+function formatTiempoHHMM(minutos) {
+    if (!minutos || minutos < 0) return '0:00';
+    const h = Math.floor(minutos/60);
+    const m = Math.round(minutos%60);
+    return `${h}:${String(m).padStart(2,'0')}`;
+}
+
+function escapeHtml(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ============================================================
+   DESCUBRIMIENTO DE FECHAS
+   ============================================================ */
+async function existeArchivo(url) {
+    try {
+        const r = await fetch(url, { method:'HEAD', cache:'no-store' });
+        return r.ok;
+    } catch { return false; }
+}
+
+async function descubrirFechas() {
+    const hoy = new Date();
+    const candidatas = [];
+    for (let i = 0; i < DIAS_HACIA_ATRAS; i++) {
+        const d = new Date(hoy);
+        d.setDate(d.getDate() - i);
+        candidatas.push(fechaAString(d));
+    }
+    const encontradas = [];
+    const BLOQUE = 15;
+    for (let i = 0; i < candidatas.length; i += BLOQUE) {
+        const bloque = candidatas.slice(i, i + BLOQUE);
+        const res = await Promise.all(bloque.map(async f => {
+            const ok = await existeArchivo(`${DATA_PATH}${PREFIJO_PRODUCCION}${f}${EXT}`);
+            return ok ? f : null;
+        }));
+        res.forEach(f => { if (f) encontradas.push(f); });
+        const pct = Math.min(100, Math.round((i+BLOQUE)/candidatas.length*100));
+        $('loadingSub').textContent = `Buscando fechas… ${pct}% (${encontradas.length})`;
+    }
+    encontradas.sort((a,b) => b.localeCompare(a));
+    return encontradas;
+}
+
+/* ============================================================
+   CARGA
+   ============================================================ */
+async function cargarCSV(url) {
+    const r = await fetch(url, { cache:'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status} en ${url}`);
+    const texto = await r.text();
+    if (!texto || texto.trim().length === 0) throw new Error(`Archivo vacío: ${url}`);
+    return parseCSV(texto);
+}
+
+async function cargarFecha(fecha) {
+    const errores = [];
+    $('fileStatus').textContent = `Cargando ${formatearFecha(fecha)}…`;
+
+    try {
+        produccionRaw = await cargarCSV(`${DATA_PATH}${PREFIJO_PRODUCCION}${fecha}${EXT}`);
+    } catch (e) {
+        errores.push(`No se pudo cargar reurdido_${fecha}.csv (${e.message})`);
+        produccionRaw = [];
+    }
+
+    try {
+        roturasData = await cargarCSV(`${DATA_PATH}${PREFIJO_ROTURAS}${fecha}${EXT}`);
+    } catch (e) {
+        roturasData = [];
+    }
+
+    try {
+        tiemposData = await cargarCSV(`${DATA_PATH}${PREFIJO_TIEMPOS}${fecha}${EXT}`);
+    } catch (e) {
+        tiemposData = [];
+    }
+
+    $('fileStatus').textContent = `Prod: ${produccionRaw.length} | Rot: ${roturasData.length} | Tp: ${tiemposData.length}`;
+    $('totalRegistros').textContent = produccionRaw.length;
+
+    mostrarErrores(errores);
+    procesarDatos();
+    render(fecha);
+}
+
+function mostrarErrores(errores) {
+    const panel = $('errorPanel');
+    if (!errores.length) { panel.classList.remove('visible'); panel.innerHTML=''; return; }
+    panel.innerHTML = '<strong>⚠️ Problemas al cargar:</strong><ul>' +
+        errores.map(e => `<li>${escapeHtml(e)}</li>`).join('') + '</ul>';
+    panel.classList.add('visible');
+}
+
+/* ============================================================
+   PROCESAMIENTO
+   ============================================================ */
+function procesarDatos() {
+    // Roturas agrupadas por máquina
+    const roturasPorMaq = {};
+    roturasData.forEach(r => {
+        const maq = r.maquina || '';
+        if (!roturasPorMaq[maq]) roturasPorMaq[maq] = { roturas: 0, paros: 0 };
+        const cant = num(r.cantidad);
+        if (r.categoria === 'paro') roturasPorMaq[maq].paros += cant;
+        else roturasPorMaq[maq].roturas += cant;
+    });
+
+    // Filas de producción con duración calculada
+    produccionData = produccionRaw.map(p => {
+        const metrosProd = num(p.metros_producidos);
+        const metrosReurdir = num(p.metros_reurdir);
+        const hilo = num(p.hilo);
+        const tacho = num(p.nro_tacho);
+        const duracion = normalizarIntervalo(p.fecha, p.hora_inicio, p.fecha_fin, p.hora_fin);
+        const maq = p.maquina || '';
+        const rM = roturasPorMaq[maq] || { roturas: 0, paros: 0 };
+        // Prorrateo de roturas por fila
+        const filasMaq = produccionRaw.filter(pp => pp.maquina === maq).length || 1;
+        const roturasFila = rM.roturas / filasMaq;
+        const parosFila = rM.paros / filasMaq;
+        const irmm = (metrosProd * (hilo||1)) > 0 ? (1000000 * roturasFila) / (metrosProd * (hilo||1)) : 0;
+
+        return {
+            fecha: p.fecha || '',
+            maquina: maq,
+            hora_inicio: p.hora_inicio || '',
+            turno: p.turno || '',
+            persona: p.persona || '',
+            estilo: p.estilo || '',
+            hilo: hilo,
+            lote: p.lote || '',
+            nro_tacho: tacho,
+            metros_reurdir: metrosReurdir,
+            metros_producidos: metrosProd,
+            fecha_fin: p.fecha_fin || '',
+            hora_fin: p.hora_fin || '',
+            duracion_minutos: duracion.min,
+            intervalo: duracion,
+            roturas: roturasFila,
+            paros: parosFila,
+            IRMM: irmm,
+        };
+    });
+}
+
+/* ============================================================
+   CÁLCULOS GLOBALES
+   ============================================================ */
+function calcularGlobales(data) {
+    const totalProd = data.reduce((s,d) => s + d.metros_producidos, 0);
+    const totalTachos = data.length;
+    const totalRoturas = data.reduce((s,d) => s + d.roturas, 0);
+    const totalParos = data.reduce((s,d) => s + d.paros, 0);
+
+    const intervalos = data
+        .filter(d => d.intervalo && d.intervalo.ini && d.intervalo.fin)
+        .map(d => ({ ini: d.intervalo.ini, fin: d.intervalo.fin }));
+    const union = calcularIntervaloUnion(intervalos);
+
+    const mtsEsperadosTotal = METROS_ESPERADOS * NUM_MAQUINAS;
+    const tachosEsperadosTotal = TACHOS_ESPERADOS * NUM_MAQUINAS;
+    const efectividad = mtsEsperadosTotal > 0 ? (totalProd / mtsEsperadosTotal) * 100 : 0;
+    const tachosHora = union.totalMin > 0 ? (totalTachos / (union.totalMin / 60)) : 0;
+
+    return {
+        totalProd, totalTachos, totalRoturas, totalParos,
+        totalTiempo: union.totalMin,
+        mtsEsperadosTotal, tachosEsperadosTotal,
+        efectividad, tachosHora,
+    };
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render(fecha) {
+    if (!fecha) return;
+    $('fechaMostrada').textContent = formatearFecha(fecha);
+    const data = produccionData;
+    const g = calcularGlobales(data);
+
+    $('kpiProdMts').textContent = g.totalProd.toLocaleString();
+    $('kpiEspMts').textContent = g.mtsEsperadosTotal.toLocaleString();
+    $('kpiProdTachos').textContent = g.totalTachos;
+    $('kpiEspTachos').textContent = g.tachosEsperadosTotal.toFixed(1);
+    $('kpiEfectividad').textContent = g.efectividad.toFixed(1) + '%';
+    $('kpiTiempoGlobal').textContent = formatTiempoHHMM(g.totalTiempo);
+    $('kpiTachosHora').textContent = g.tachosHora.toFixed(2);
+    $('kpiRoturasGlobal').textContent = g.totalRoturas.toFixed(0) + ' + ' + g.totalParos.toFixed(0);
+
+    renderMaquinas(data);
+    renderOperador(data);
+    renderEstilo(data);
+    renderLote(data);
+    renderRoturas();
+    renderTiempos();
+    renderComentarios(fecha);
+}
+
+/* ---------- Máquinas ---------- */
+function renderMaquinas(data) {
+    const grid = $('maquinaGrid');
+    if (!data.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#78909c;">Sin datos de producción para esta fecha</div>`;
+        return;
+    }
+    const maquinas = [...new Set(data.map(d => d.maquina))].sort();
+    let html = '';
+    maquinas.forEach(maq => {
+        const items = data.filter(d => d.maquina === maq);
+        const prod = items.reduce((s,d) => s + d.metros_producidos, 0);
+        const tachos = items.length;
+        const roturas = items.reduce((s,d) => s + d.roturas, 0);
+        const paros = items.reduce((s,d) => s + d.paros, 0);
+        const intervalos = items
+            .filter(d => d.intervalo && d.intervalo.ini && d.intervalo.fin)
+            .map(d => ({ ini: d.intervalo.ini, fin: d.intervalo.fin }));
+        const union = calcularIntervaloUnion(intervalos);
+        const efectividad = METROS_ESPERADOS > 0 ? (prod / METROS_ESPERADOS) * 100 : 0;
+        const tachosHora = union.totalMin > 0 ? (tachos / (union.totalMin / 60)) : 0;
+        const hiloProm = prod > 0 ? items.reduce((s,d) => s + d.metros_producidos * d.hilo, 0) / prod : 1;
+        const irmm = items.reduce((s,d) => s + d.IRMM * d.metros_producidos, 0) / (prod || 1);
+
+        html += `<div class="maquina-block">
+            <div class="maquina-header">
+                <h3>⚙️ ${maq}</h3>
+                <span class="total-badge">${formatTiempoHHMM(union.totalMin)}</span>
+            </div>
+            <div class="kpi-maquina-grid">
+                <div class="kpi-maquina-item"><span class="label">Mts Prod</span><span class="value">${prod.toLocaleString()}</span></div>
+                <div class="kpi-maquina-item"><span class="label">Mts Esp</span><span class="value">${METROS_ESPERADOS.toLocaleString()}</span></div>
+                <div class="kpi-maquina-item"><span class="label">Tachos</span><span class="value">${tachos}</span></div>
+                <div class="kpi-maquina-item"><span class="label">Tachos Esp</span><span class="value">${TACHOS_ESPERADOS}</span></div>
+                <div class="kpi-maquina-item"><span class="label">% Efectividad</span><span class="value efectividad">${efectividad.toFixed(1)}%</span></div>
+                <div class="kpi-maquina-item"><span class="label">Tachos/Hora</span><span class="value">${tachosHora.toFixed(2)}</span></div>
+                <div class="kpi-maquina-item"><span class="label">T. Productivo</span><span class="value tiempo">${formatTiempoHHMM(union.totalMin)}</span></div>
+                <div class="kpi-maquina-item"><span class="label">Roturas</span><span class="value roturas">${roturas.toFixed(1)}</span></div>
+                <div class="kpi-maquina-item"><span class="label">Paros</span><span class="value paros">${paros.toFixed(1)}</span></div>
+                <div class="kpi-maquina-item"><span class="label">IRMM</span><span class="value">${irmm.toFixed(2)}</span></div>
+                <div class="kpi-maquina-item" style="grid-column:1/-1;"><span class="label">Hilo prom.</span><span class="value">${hiloProm.toFixed(1)}</span></div>
+            </div>
+        </div>`;
+    });
+    grid.innerHTML = html;
+}
+
+/* ---------- Operador ---------- */
+function renderOperador(data) {
+    const tbody = $('tbodyOperador');
+    if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:#78909c;">Sin datos</td></tr>`;
+        ['kpiOpProdMts','kpiOpTachos','kpiOpEfectividad','kpiOpTiempo'].forEach(id => $(id).textContent = '-');
+        return;
+    }
+    const porOp = {};
+    data.forEach(d => {
+        if (!porOp[d.persona]) porOp[d.persona] = {
+            prod:0, tachos:0, roturas:0, paros:0,
+            maquinas:new Set(), turnos:new Set(),
+            intervalos: [], prodHilo:0
+        };
+        const o = porOp[d.persona];
+        o.prod += d.metros_producidos;
+        o.tachos += 1;
+        o.roturas += d.roturas;
+        o.paros += d.paros;
+        o.prodHilo += d.metros_producidos * d.hilo;
+        if (d.maquina) o.maquinas.add(d.maquina);
+        if (d.turno) o.turnos.add(d.turno);
+        if (d.intervalo && d.intervalo.ini && d.intervalo.fin) {
+            o.intervalos.push({ ini: d.intervalo.ini, fin: d.intervalo.fin });
+        }
+    });
+
+    let html = '';
+    const entries = Object.entries(porOp).sort((a,b) => b[1].prod - a[1].prod);
+    entries.forEach(([op, o]) => {
+        const efectividad = METROS_ESPERADOS > 0 ? (o.prod / METROS_ESPERADOS) * 100 : 0;
+        const union = calcularIntervaloUnion(o.intervalos);
+        const hiloProm = o.prod > 0 ? o.prodHilo / o.prod : 1;
+        const irmm = (o.prod * hiloProm) > 0 ? (1000000 * o.roturas) / (o.prod * hiloProm) : 0;
+
+        html += `<tr>
+            <td class="nombre-col">${escapeHtml(op)}</td>
+            <td class="maquina-col">${[...o.maquinas].map(m => m.replace('REURDIDORA # ', 'R')).join(', ')}</td>
+            <td>${[...o.turnos].join(', ')}</td>
+            <td>${o.prod.toLocaleString()}</td>
+            <td>${o.tachos}</td>
+            <td style="color:#00e676;font-weight:700;">${efectividad.toFixed(1)}%</td>
+            <td style="color:#f06292;">${o.roturas.toFixed(1)}</td>
+            <td style="color:#ffb74d;">${irmm.toFixed(2)}</td>
+            <td style="color:#4fc3f7;">${formatTiempoHHMM(union.totalMin)}</td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    const totalProd = entries.reduce((s,[_,o]) => s + o.prod, 0);
+    const totalTachos = entries.reduce((s,[_,o]) => s + o.tachos, 0);
+    const efectProm = entries.length > 0
+        ? entries.reduce((s,[_,o]) => s + (o.prod / METROS_ESPERADOS) * 100, 0) / entries.length
+        : 0;
+    const todosIntervalos = data
+        .filter(d => d.intervalo && d.intervalo.ini && d.intervalo.fin)
+        .map(d => ({ ini: d.intervalo.ini, fin: d.intervalo.fin }));
+    const unionGlobal = calcularIntervaloUnion(todosIntervalos);
+
+    $('kpiOpProdMts').textContent = totalProd.toLocaleString();
+    $('kpiOpTachos').textContent = totalTachos;
+    $('kpiOpEfectividad').textContent = efectProm.toFixed(1) + '%';
+    $('kpiOpTiempo').textContent = formatTiempoHHMM(unionGlobal.totalMin);
+}
+
+/* ---------- Estilo ---------- */
+function renderEstilo(data) {
+    const tbody = $('tbodyTitulo');
+    if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:#78909c;">Sin datos</td></tr>`;
+        ['kpiTitProdMts','kpiTitTachos','kpiTitRoturas','kpiTitIRMM'].forEach(id => $(id).textContent = '-');
+        return;
+    }
+    const porEstilo = {};
+    data.forEach(d => {
+        const key = `${d.estilo}|${d.hilo}`;
+        if (!porEstilo[key]) porEstilo[key] = { estilo:d.estilo, hilo:d.hilo, prod:0, tachos:0, roturas:0, prodHilo:0, intervalos: [] };
+        const e = porEstilo[key];
+        e.prod += d.metros_producidos;
+        e.tachos += 1;
+        e.roturas += d.roturas;
+        e.prodHilo += d.metros_producidos * d.hilo;
+        if (d.intervalo && d.intervalo.ini && d.intervalo.fin) {
+            e.intervalos.push({ ini: d.intervalo.ini, fin: d.intervalo.fin });
+        }
+    });
+
+    let html = '';
+    const entries = Object.values(porEstilo).sort((a,b) => b.prod - a.prod);
+    entries.forEach(e => {
+        const efectividad = METROS_ESPERADOS > 0 ? (e.prod / METROS_ESPERADOS) * 100 : 0;
+        const hiloProm = e.prod > 0 ? e.prodHilo / e.prod : 1;
+        const irmm = (e.prod * hiloProm) > 0 ? (1000000 * e.roturas) / (e.prod * hiloProm) : 0;
+        const union = calcularIntervaloUnion(e.intervalos);
+        html += `<tr>
+            <td class="nombre-col">${escapeHtml(e.estilo)}</td>
+            <td>${e.hilo}</td>
+            <td>${e.prod.toLocaleString()}</td>
+            <td>${e.tachos}</td>
+            <td style="color:#00e676;font-weight:700;">${efectividad.toFixed(1)}%</td>
+            <td style="color:#f06292;">${e.roturas.toFixed(1)}</td>
+            <td style="color:#ffb74d;">${irmm.toFixed(2)}</td>
+            <td style="color:#4fc3f7;">${formatTiempoHHMM(union.totalMin)}</td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    const totalProd = entries.reduce((s,e) => s + e.prod, 0);
+    const totalTachos = entries.reduce((s,e) => s + e.tachos, 0);
+    const totalRoturas = entries.reduce((s,e) => s + e.roturas, 0);
+    const totalProdHilo = entries.reduce((s,e) => s + e.prodHilo, 0);
+    const hiloProm = totalProd > 0 ? totalProdHilo / totalProd : 1;
+    const irmmGlobal = (totalProd * hiloProm) > 0 ? (1000000 * totalRoturas) / (totalProd * hiloProm) : 0;
+
+    $('kpiTitProdMts').textContent = totalProd.toLocaleString();
+    $('kpiTitTachos').textContent = totalTachos;
+    $('kpiTitRoturas').textContent = totalRoturas.toFixed(1);
+    $('kpiTitIRMM').textContent = irmmGlobal.toFixed(2);
+}
+
+/* ---------- Lote ---------- */
+function renderLote(data) {
+    const tbody = $('tbodyLote');
+    if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:30px;color:#78909c;">Sin datos</td></tr>`;
+        ['kpiLoteProdMts','kpiLoteTachos','kpiLoteTotal','kpiLoteEfectividad'].forEach(id => $(id).textContent = '-');
+        return;
+    }
+    const porLote = {};
+    data.forEach(d => {
+        const lote = d.lote || '—';
+        if (!porLote[lote]) porLote[lote] = {
+            lote, estilos:new Set(), hilos:new Set(),
+            maquinas:new Set(), turnos:new Set(), operarios:new Set(),
+            prod:0, tachos:0, intervalos: []
+        };
+        const l = porLote[lote];
+        if (d.estilo) l.estilos.add(d.estilo);
+        if (d.hilo) l.hilos.add(d.hilo);
+        if (d.maquina) l.maquinas.add(d.maquina);
+        if (d.turno) l.turnos.add(d.turno);
+        if (d.persona) l.operarios.add(d.persona);
+        l.prod += d.metros_producidos;
+        l.tachos += 1;
+        if (d.intervalo && d.intervalo.ini && d.intervalo.fin) {
+            l.intervalos.push({ ini: d.intervalo.ini, fin: d.intervalo.fin });
+        }
+    });
+
+    const filas = Object.values(porLote).map(l => {
+        const efectividad = METROS_ESPERADOS > 0 ? (l.prod / METROS_ESPERADOS) * 100 : 0;
+        let estado = 'pendiente', estadoTxt = 'Pendiente';
+        if (l.prod >= METROS_ESPERADOS) {
+            estado = l.prod > METROS_ESPERADOS * 1.05 ? 'excedido' : 'completo';
+            estadoTxt = estado === 'excedido' ? 'Excedido' : 'Completo';
+        } else if (l.prod > 0) {
+            estado = 'parcial'; estadoTxt = 'Parcial';
+        }
+        return {
+            ...l,
+            estiloTxt: [...l.estilos].join(', ') || '—',
+            hiloTxt: [...l.hilos].join(', ') || '—',
+            maqTxt: [...l.maquinas].map(m => m.replace('REURDIDORA # ', 'R')).sort().join(', ') || '—',
+            turnosTxt: [...l.turnos].join(', ') || '—',
+            operariosTxt: [...l.operarios].sort().join(', ') || '—',
+            efectividad, estado, estadoTxt,
+        };
+    });
+
+    filas.sort((a, b) => b.efectividad - a.efectividad);
+
+    let html = '';
+    filas.forEach(f => {
+        const barW = Math.min(f.efectividad, 100);
+        html += `<tr>
+            <td class="nombre-col">${escapeHtml(f.lote)}</td>
+            <td>${escapeHtml(f.estiloTxt)}</td>
+            <td>${escapeHtml(f.hiloTxt)}</td>
+            <td class="maquina-col">${escapeHtml(f.maqTxt)}</td>
+            <td>${escapeHtml(f.turnosTxt)}</td>
+            <td style="text-align:left;">${escapeHtml(f.operariosTxt)}</td>
+            <td>${f.prod.toLocaleString()}</td>
+            <td>${f.tachos}</td>
+            <td>
+                <div class="barra-wrapper">
+                    <div class="barra-track"><div class="barra-avance" style="width:${barW}%;"></div></div>
+                    <span style="font-weight:700;color:#00e676;">${f.efectividad.toFixed(1)}%</span>
+                </div>
+            </td>
+            <td><span class="estado-badge ${f.estado}">${f.estadoTxt}</span></td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+
+    const totalProd = filas.reduce((s, f) => s + f.prod, 0);
+    const totalTachos = filas.reduce((s, f) => s + f.tachos, 0);
+    $('kpiLoteProdMts').textContent = totalProd.toLocaleString();
+    $('kpiLoteTachos').textContent = totalTachos;
+    $('kpiLoteTotal').textContent = filas.length;
+    $('kpiLoteEfectividad').textContent = METROS_ESPERADOS > 0 ? ((totalProd / METROS_ESPERADOS) * 100).toFixed(1) + '%' : '-';
+}
+
+/* ---------- Roturas ---------- */
+function renderRoturas() {
+    const grid = $('roturasGrid');
+    if (!roturasData.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#78909c;">Sin datos de roturas para esta fecha</div>`;
+        ['kpiTotalRoturas','kpiTipos','kpiMaquinas','kpiTopTipo','kpiTopCantidad'].forEach(id => $(id).textContent = id==='kpiTopTipo' ? '-' : id==='kpiTopCantidad' ? '' : '0');
+        return;
+    }
+    const totalRoturas = roturasData.reduce((s,r) => s + num(r.cantidad), 0);
+    const tipos = new Set(roturasData.map(r => r.tipo_rotura));
+    const maqs = new Set(roturasData.map(r => r.maquina));
+
+    const tipoCount = {};
+    roturasData.forEach(r => { tipoCount[r.tipo_rotura] = (tipoCount[r.tipo_rotura]||0) + num(r.cantidad); });
+    let topTipo = '-', topCant = 0;
+    Object.entries(tipoCount).forEach(([t,c]) => { if (c > topCant) { topCant = c; topTipo = t; } });
+
+    $('kpiTotalRoturas').textContent = totalRoturas.toFixed(0);
+    $('kpiTipos').textContent = tipos.size;
+    $('kpiMaquinas').textContent = maqs.size;
+    $('kpiTopTipo').textContent = topTipo;
+    $('kpiTopCantidad').textContent = topCant > 0 ? `${topCant} (${(topCant/totalRoturas*100).toFixed(1)}%)` : '';
+
+    const maquinas = [...new Set(roturasData.map(r => r.maquina))].sort();
+    let html = '';
+    maquinas.forEach(maq => {
+        const items = roturasData.filter(r => r.maquina === maq);
+        const totalMaq = items.reduce((s,r) => s + num(r.cantidad), 0);
+        const pctMaq = totalRoturas > 0 ? (totalMaq/totalRoturas*100).toFixed(1) : 0;
+
+        html += `<div class="rotura-block">
+            <div class="rotura-header">
+                <h3>⚙️ ${maq}</h3>
+                <span class="total-badge">${totalMaq} (${pctMaq}%)</span>
+            </div>
+            <div class="rotura-detalle-wrap">
+                <table><thead><tr><th>Tipo</th><th>Categ</th><th style="text-align:right">Cant</th></tr></thead><tbody>`;
+        items.sort((a,b) => num(b.cantidad) - num(a.cantidad)).forEach(r => {
+            const cant = num(r.cantidad);
+            const pct = totalMaq > 0 ? (cant/totalMaq*100).toFixed(1) : 0;
+            const cat = r.categoria === 'paro' ? 'paro' : 'rotura';
+            html += `<tr>
+                <td>${escapeHtml(r.tipo_rotura)}</td>
+                <td><span class="categoria-badge ${cat}">${cat}</span></td>
+                <td style="text-align:right">${cant} <span class="porcentaje-text">(${pct}%)</span></td>
+            </tr>`;
+        });
+        html += `</tbody></table></div></div>`;
+    });
+    grid.innerHTML = html;
+}
+
+/* ---------- Tiempos ---------- */
+function renderTiempos() {
+    const grid = $('tiemposGrid');
+    if (!tiemposData.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#78909c;">Sin tiempos perdidos para esta fecha</div>`;
+        ['kpiTpTotalHorasTab','kpiTpPctPromedio','kpiTpCausas','kpiTpTopCausa','kpiTpTopCausaCant'].forEach(id => $(id).textContent = id==='kpiTpTopCausa' ? '-' : id==='kpiTpTopCausaCant' ? '' : '0');
+        return;
+    }
+    const totalHoras = tiemposData.reduce((s,t) => s + num(t.horas), 0);
+    const causas = new Set(tiemposData.map(t => t.causa));
+    const pctProm = tiemposData.reduce((s,t) => s + num(t.porcentaje), 0) / tiemposData.length;
+
+    const causaCount = {};
+    tiemposData.forEach(t => { causaCount[t.causa] = (causaCount[t.causa]||0) + num(t.horas); });
+    let topCausa = '-', topHoras = 0;
+    Object.entries(causaCount).forEach(([c,h]) => { if (h > topHoras) { topHoras = h; topCausa = c; } });
+
+    $('kpiTpTotalHorasTab').textContent = totalHoras.toFixed(2) + ' h';
+    $('kpiTpPctPromedio').textContent = pctProm.toFixed(1) + '%';
+    $('kpiTpCausas').textContent = causas.size;
+    $('kpiTpTopCausa').textContent = topCausa;
+    $('kpiTpTopCausaCant').textContent = topHoras > 0 ? `${topHoras.toFixed(2)} h (${(topHoras/totalHoras*100).toFixed(1)}%)` : '';
+
+    const maquinas = [...new Set(tiemposData.map(t => t.maquina))].sort();
+    let html = '';
+    maquinas.forEach(maq => {
+        const items = tiemposData.filter(t => t.maquina === maq);
+        const totalMaq = items.reduce((s,t) => s + num(t.horas), 0);
+        const pctMaq = totalHoras > 0 ? (totalMaq/totalHoras*100).toFixed(1) : 0;
+        html += `<div class="rotura-block">
+            <div class="rotura-header">
+                <h3>⚙️ ${maq}</h3>
+                <span class="total-badge">${totalMaq.toFixed(2)} h (${pctMaq}%)</span>
+            </div>
+            <div class="rotura-detalle-wrap">
+                <table><thead><tr><th>Causa</th><th style="text-align:right">Horas</th><th style="text-align:right">%</th></tr></thead><tbody>`;
+        items.sort((a,b) => num(b.horas) - num(a.horas)).forEach(t => {
+            const h = num(t.horas);
+            const p = num(t.porcentaje);
+            html += `<tr>
+                <td>${escapeHtml(t.causa)}</td>
+                <td style="text-align:right">${h.toFixed(2)}</td>
+                <td style="text-align:right"><span class="porcentaje-text">${p.toFixed(1)}%</span></td>
+            </tr>`;
+        });
+        html += `</tbody></table></div></div>`;
+    });
+    grid.innerHTML = html;
+}
+
+/* ============================================================
+   COMENTARIOS
+   ============================================================ */
+function parseCSVLine(line) {
+    const out = []; let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') {
+            if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+            else inQ = !inQ;
+        } else if (c === ',' && !inQ) { out.push(cur); cur = ''; }
+        else cur += c;
+    }
+    out.push(cur);
+    return out;
+}
+
+async function cargarComentarios(forzar = false) {
+    if (comentariosCargados && !forzar) return comentariosCache;
+    try {
+        const r = await fetch(COMENTARIOS_CSV + '?t=' + Date.now(), { cache:'no-store' });
+        if (!r.ok) { comentariosCache = []; comentariosCargados = true; return []; }
+        const txt = await r.text();
+        const lineas = txt.split('\n').filter(l => l.trim() !== '');
+        if (lineas.length < 2) { comentariosCache = []; comentariosCargados = true; return []; }
+        const headers = parseCSVLine(lineas[0]);
+        comentariosCache = lineas.slice(1).map(l => {
+            const cols = parseCSVLine(l);
+            const obj = {};
+            headers.forEach((h,i) => obj[h] = cols[i] || '');
+            return obj;
+        });
+        comentariosCargados = true;
+        return comentariosCache;
+    } catch {
+        comentariosCache = []; comentariosCargados = true; return [];
+    }
+}
+
+function renderComentarios(fecha) {
+    $('comFechaBadge').textContent = formatearFecha(fecha);
+    const delDia = comentariosCache.filter(c => c.fecha === fecha);
+    $('kpiComHoy').textContent = delDia.length;
+    $('kpiComTotal').textContent = comentariosCache.length;
+
+    const catCount = {};
+    delDia.forEach(c => catCount[c.categoria] = (catCount[c.categoria]||0)+1);
+    let topCat = '-', topN = 0;
+    Object.entries(catCount).forEach(([c,n]) => { if (n > topN) { topN = n; topCat = c; } });
+    $('kpiComTopCat').textContent = topCat;
+
+    let ultimo = null;
+    comentariosCache.forEach(c => {
+        const t = new Date(c.timestamp).getTime();
+        if (!isNaN(t) && (!ultimo || t > new Date(ultimo.timestamp).getTime())) ultimo = c;
+    });
+    if (ultimo) {
+        $('kpiComUltimo').textContent = ultimo.categoria;
+        $('kpiComUltimoSub').textContent = `${ultimo.nombre} · ${formatearFecha(ultimo.fecha)}`;
+    } else {
+        $('kpiComUltimo').textContent = '-';
+        $('kpiComUltimoSub').textContent = '';
+    }
+
+    const fCat = $('comFiltroCat').value;
+    const fBus = $('comBuscar').value.toLowerCase().trim();
+    let filtrados = delDia;
+    if (fCat) filtrados = filtrados.filter(c => c.categoria === fCat);
+    if (fBus) filtrados = filtrados.filter(c => [c.comentario,c.nombre,c.maquina,c.categoria].join(' ').toLowerCase().includes(fBus));
+
+    $('comCountBadge').textContent = filtrados.length === delDia.length ? filtrados.length : `${filtrados.length}/${delDia.length}`;
+    $('badgeComCount').textContent = delDia.length;
+
+    const lista = $('comLista');
+    if (filtrados.length === 0) {
+        lista.innerHTML = delDia.length === 0
+            ? '<p class="com-vacio">Sin comentarios para esta fecha.</p>'
+            : '<p class="com-vacio">Ningún comentario coincide con los filtros.</p>';
+        return;
+    }
+    filtrados.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+    lista.innerHTML = filtrados.map(c => {
+        const d = new Date(c.timestamp);
+        const fechaStr = isNaN(d) ? c.timestamp : d.toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        return `<div class="com-item">
+            <div class="com-item-header">
+                <div class="com-item-meta">
+                    <span class="com-nombre">${escapeHtml(c.nombre)}</span>
+                    <span class="com-cat">${escapeHtml(c.categoria)}</span>
+                    ${c.maquina ? `<span class="com-maq">${escapeHtml(c.maquina)}</span>` : ''}
+                </div>
+                <span class="com-fecha">${fechaStr}</span>
+            </div>
+            <div class="com-texto">${escapeHtml(c.comentario)}</div>
+        </div>`;
+    }).join('');
+}
+
+/* Enviar comentario */
+$('formComentario').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fechaFormulario = $('comFecha').value;
+    if (!fechaFormulario) { $('comEstado').textContent = '⚠️ Selecciona una fecha'; return; }
+    const fecha = inputParaFecha(fechaFormulario);
+    const fechaMostrada = $('fechaSelect').value;
+    const payload = {
+        fecha,
+        nombre: $('comNombre').value.trim() || 'Anónimo',
+        categoria: $('comCategoria').value,
+        maquina: $('comMaquina').value,
+        comentario: $('comTexto').value.trim().replace(/[\r\n]+/g, ' ')
+    };
+    if (!payload.comentario) { $('comEstado').textContent = '⚠️ Vacío'; return; }
+
+    const btn = $('comEnviar'), est = $('comEstado');
+    btn.disabled = true; est.textContent = '⏳ Publicando…';
+    try {
+        const r = await fetch(API_COMENTARIO, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const data = await r.json();
+        if (!r.ok || !data.ok) throw new Error(data.error || 'Error');
+        if (fecha === fechaMostrada) {
+            est.textContent = '✅ Publicado';
+        } else {
+            est.textContent = `✅ Guardado para ${formatearFecha(fecha)}`;
+        }
+        $('comTexto').value = ''; $('comCharCount').textContent = '0';
+        await cargarComentarios(true);
+        renderComentarios(fechaMostrada);
+        setTimeout(() => est.textContent = '', 4000);
+    } catch (err) {
+        est.textContent = '❌ ' + err.message;
+    } finally {
+        btn.disabled = false;
+    }
+});
+
+$('comTexto').addEventListener('input', function() { $('comCharCount').textContent = this.value.length; });
+$('comFiltroCat').addEventListener('change', () => renderComentarios($('fechaSelect').value));
+$('comBuscar').addEventListener('input', () => renderComentarios($('fechaSelect').value));
+$('comLimpiarFiltros').addEventListener('click', () => {
+    $('comFiltroCat').value = ''; $('comBuscar').value = '';
+    renderComentarios($('fechaSelect').value);
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const tab = this.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.toggle('active', tc.id === `tab-${tab}`));
+        if (tab === 'comentarios') {
+            const f = $('fechaSelect').value;
+            if (f) (async () => { await cargarComentarios(true); renderComentarios(f); })();
+        }
+    });
+});
+
+/* ============================================================
+   CONFIGURACIÓN
+   ============================================================ */
+function cargarConfigGuardada() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+}
+
+function aplicarConfig(cfg) {
+    if (!cfg) return false;
+    if (typeof cfg.mtsPorTacho === 'number' && cfg.mtsPorTacho > 0) METROS_POR_TACHO = cfg.mtsPorTacho;
+    if (typeof cfg.mtsEsperados === 'number' && cfg.mtsEsperados > 0) METROS_ESPERADOS = cfg.mtsEsperados;
+    if (typeof cfg.tachosEsperados === 'number' && cfg.tachosEsperados > 0) TACHOS_ESPERADOS = cfg.tachosEsperados;
+    if (typeof cfg.numMaquinas === 'number' && cfg.numMaquinas > 0) NUM_MAQUINAS = cfg.numMaquinas;
+    if (typeof cfg.horasDia === 'number' && cfg.horasDia > 0) HORAS_DIA = cfg.horasDia;
+    return true;
+}
+
+function guardarConfig() {
+    const cfg = {
+        mtsPorTacho: parseFloat($('cfgMtsPorTacho').value) || DEFAULTS.mtsPorTacho,
+        mtsEsperados: parseFloat($('cfgMtsEsperados').value) || DEFAULTS.mtsEsperados,
+        tachosEsperados: parseFloat($('cfgTachosEsperados').value) || DEFAULTS.tachosEsperados,
+        numMaquinas: parseFloat($('cfgNumMaquinas').value) || DEFAULTS.numMaquinas,
+        horasDia: parseFloat($('cfgHorasDia').value) || DEFAULTS.horasDia,
+        fechaModificacion: new Date().toISOString(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+    return aplicarConfig(cfg);
+}
+
+function restaurarDefaults() {
+    localStorage.removeItem(STORAGE_KEY);
+    METROS_POR_TACHO = DEFAULTS.mtsPorTacho;
+    METROS_ESPERADOS = DEFAULTS.mtsEsperados;
+    TACHOS_ESPERADOS = DEFAULTS.tachosEsperados;
+    NUM_MAQUINAS = DEFAULTS.numMaquinas;
+    HORAS_DIA = DEFAULTS.horasDia;
+    pintarFormularioConfig(null);
+}
+
+function pintarFormularioConfig(cfg) {
+    $('cfgMtsPorTacho').value = METROS_POR_TACHO;
+    $('cfgMtsEsperados').value = METROS_ESPERADOS;
+    $('cfgTachosEsperados').value = TACHOS_ESPERADOS;
+    $('cfgNumMaquinas').value = NUM_MAQUINAS;
+    $('cfgHorasDia').value = HORAS_DIA;
+
+    const estado = $('cfgEstado');
+    const fechaMod = $('cfgFechaMod');
+    const badge = $('cfgBadgeProd');
+
+    if (cfg && cfg.fechaModificacion) {
+        estado.textContent = 'Personalizado';
+        estado.style.color = '#ffb74d';
+        const d = new Date(cfg.fechaModificacion);
+        fechaMod.textContent = d.toLocaleString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+        badge.textContent = 'Modificado';
+        badge.style.background = '#3a2f1a';
+        badge.style.color = '#ffb74d';
+    } else {
+        estado.textContent = 'Por defecto';
+        estado.style.color = '#00e676';
+        fechaMod.textContent = '-';
+        badge.textContent = 'Editable';
+        badge.style.background = '#1b3a4b';
+        badge.style.color = '#4fc3f7';
+    }
+    $('cfgValMts').textContent = METROS_POR_TACHO.toLocaleString();
+    $('cfgValTachos').textContent = TACHOS_ESPERADOS;
+}
+
+function mostrarToast(msg) {
+    let toast = document.getElementById('configToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'configToast';
+        toast.className = 'config-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function refrescarDashboard() {
+    const sel = $('fechaSelect');
+    if (sel && sel.value) render(sel.value);
+}
+
+$('cfgGuardar').addEventListener('click', () => {
+    guardarConfig();
+    pintarFormularioConfig(cargarConfigGuardada());
+    refrescarDashboard();
+    mostrarToast('✅ Configuración guardada');
+});
+
+$('cfgRestaurar').addEventListener('click', () => {
+    restaurarDefaults();
+    refrescarDashboard();
+    mostrarToast('♻️ Restaurado');
+});
+
+$('cfgExportar').addEventListener('click', () => {
+    const cfg = cargarConfigGuardada() || {
+        mtsPorTacho: METROS_POR_TACHO, mtsEsperados: METROS_ESPERADOS,
+        tachosEsperados: TACHOS_ESPERADOS, numMaquinas: NUM_MAQUINAS,
+        horasDia: HORAS_DIA, fechaModificacion: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `config_reurdido_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    mostrarToast('📤 Exportado');
+});
+
+$('cfgImportar').addEventListener('click', () => $('cfgImportarFile').click());
+
+$('cfgImportarFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const cfg = JSON.parse(ev.target.result);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+            aplicarConfig(cfg);
+            pintarFormularioConfig(cfg);
+            refrescarDashboard();
+            mostrarToast('📥 Importado');
+        } catch (err) {
+            alert('JSON inválido: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    this.value = '';
+});
+
+const _cfgInicial = cargarConfigGuardada();
+aplicarConfig(_cfgInicial);
+pintarFormularioConfig(_cfgInicial);
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+async function arrancar() {
+    const overlay = $('loadingOverlay');
+    try {
+        $('loadingText').textContent = 'Buscando fechas disponibles…';
+        fechasDisponibles = await descubrirFechas();
+
+        if (!fechasDisponibles.length) {
+            overlay.classList.add('hidden');
+            $('fechaSelect').innerHTML = '<option value="">Sin datos</option>';
+            $('fileStatus').textContent = 'Sin datos';
+            $('fechaMostrada').textContent = 'Sin datos';
+            mostrarErrores(['No se encontró ningún archivo reurdido_YYYYMMDD.csv en data/']);
+            return;
+        }
+
+        $('fechaSelect').innerHTML = fechasDisponibles.map(f => `<option value="${f}">${formatearFecha(f)}</option>`).join('');
+        const ultima = fechasDisponibles[0];
+        $('fechaSelect').value = ultima;
+        $('comFecha').value = fechaParaInput(ultima);
+
+        $('loadingText').textContent = 'Cargando datos…';
+        $('loadingSub').textContent = formatearFecha(ultima);
+
+        await cargarFecha(ultima);
+        await cargarComentarios(true);
+        renderComentarios(ultima);
+        overlay.classList.add('hidden');
+
+        $('fechaSelect').addEventListener('change', async function() {
+            if (!this.value) return;
+            $('comFecha').value = fechaParaInput(this.value);
+            overlay.classList.remove('hidden');
+            $('loadingText').textContent = 'Cargando fecha…';
+            $('loadingSub').textContent = formatearFecha(this.value);
+            try {
+                await cargarFecha(this.value);
+                await cargarComentarios(true);
+                renderComentarios(this.value);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                overlay.classList.add('hidden');
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        overlay.classList.add('hidden');
+        $('fechaSelect').innerHTML = '<option value="">Error</option>';
+        $('fileStatus').textContent = 'Error';
+        mostrarErrores(['Error al arrancar: ' + err.message]);
+    }
+}
+
+arrancar();
+</script>
+</body>
+</html>
