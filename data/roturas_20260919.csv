@@ -1,0 +1,12 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20260919,REURDIDORA # 06,Revientes en peine,40,rotura
+20260919,REURDIDORA # 06,Transferencias,22,rotura
+20260919,REURDIDORA # 06,Hilo debil,12,rotura
+20260919,REURDIDORA # 06,Hilo suelto,9,rotura
+20260919,REURDIDORA # 06,Enredos de cintas,2,rotura
+20260919,REURDIDORA # 06,Enredo de cinta,57,paro
+20260919,REURDIDORA # 06,Calzas,28,paro
+20260919,REURDIDORA # 07,Hilo debil,28,rotura
+20260919,REURDIDORA # 07,Revientes en peine,14,rotura
+20260919,REURDIDORA # 07,Transferencias,11,rotura
+20260919,REURDIDORA # 07,Enredo de cinta,47,paro

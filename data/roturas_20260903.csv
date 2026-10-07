@@ -1,0 +1,42 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20260903,REURDIDORA # 03,Revientes en peine,54,rotura
+20260903,REURDIDORA # 03,Hilos cruzados,33,rotura
+20260903,REURDIDORA # 03,Hilo debil,9,rotura
+20260903,REURDIDORA # 03,Transferencias,7,rotura
+20260903,REURDIDORA # 03,Mona o motas,5,rotura
+20260903,REURDIDORA # 03,Hilo suelto,1,rotura
+20260903,REURDIDORA # 03,Hilos sobrantes,1,rotura
+20260903,REURDIDORA # 03,Enredo de cinta,15,paro
+20260903,REURDIDORA # 03,Calzas,3,paro
+20260903,REURDIDORA # 05,Hilos rotos o picados,36,rotura
+20260903,REURDIDORA # 05,Revientes en peine,25,rotura
+20260903,REURDIDORA # 05,Hilo debil,14,rotura
+20260903,REURDIDORA # 05,Hilo suelto,14,rotura
+20260903,REURDIDORA # 05,Hilos cruzados,6,rotura
+20260903,REURDIDORA # 05,Transferencias,5,rotura
+20260903,REURDIDORA # 05,Nudo flojo,2,rotura
+20260903,REURDIDORA # 05,Enredo de cinta,25,paro
+20260903,REURDIDORA # 05,Calzas,21,paro
+20260903,REURDIDORA # 06,Revientes en peine,59,rotura
+20260903,REURDIDORA # 06,Transferencias,38,rotura
+20260903,REURDIDORA # 06,Hilo debil,31,rotura
+20260903,REURDIDORA # 06,Hilo suelto,15,rotura
+20260903,REURDIDORA # 06,Hilos rotos o picados,9,rotura
+20260903,REURDIDORA # 06,Descruce de hilo,9,rotura
+20260903,REURDIDORA # 06,Hilos cruzados,9,rotura
+20260903,REURDIDORA # 06,Enredos de cintas,6,rotura
+20260903,REURDIDORA # 06,Nudo flojo,4,rotura
+20260903,REURDIDORA # 06,Mona o motas,3,rotura
+20260903,REURDIDORA # 06,Enredo de cinta,58,paro
+20260903,REURDIDORA # 06,Calzas,53,paro
+20260903,REURDIDORA # 07,Hilos rotos o picados,17,rotura
+20260903,REURDIDORA # 07,Hilos cruzados,14,rotura
+20260903,REURDIDORA # 07,Hilo suelto,12,rotura
+20260903,REURDIDORA # 07,Transferencias,11,rotura
+20260903,REURDIDORA # 07,Hilo debil,9,rotura
+20260903,REURDIDORA # 07,Revientes en peine,8,rotura
+20260903,REURDIDORA # 07,Nudo flojo,6,rotura
+20260903,REURDIDORA # 07,Descruce de hilo,6,rotura
+20260903,REURDIDORA # 07,Enredos de cintas,3,rotura
+20260903,REURDIDORA # 07,Enredo de cinta,19,paro
+20260903,REURDIDORA # 07,Calzas,17,paro

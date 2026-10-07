@@ -1,0 +1,33 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20260922,REURDIDORA # 05,Hilos cruzados,76,rotura
+20260922,REURDIDORA # 05,Hilo suelto,71,rotura
+20260922,REURDIDORA # 05,Hilo debil,40,rotura
+20260922,REURDIDORA # 05,Revientes en peine,38,rotura
+20260922,REURDIDORA # 05,Hilos rotos o picados,32,rotura
+20260922,REURDIDORA # 05,Transferencias,22,rotura
+20260922,REURDIDORA # 05,Descruce de hilo,15,rotura
+20260922,REURDIDORA # 05,Nudo flojo,7,rotura
+20260922,REURDIDORA # 05,Mona o motas,3,rotura
+20260922,REURDIDORA # 05,Enredos de cintas,2,rotura
+20260922,REURDIDORA # 05,Enredo de cinta,31,paro
+20260922,REURDIDORA # 05,Calzas,21,paro
+20260922,REURDIDORA # 06,Hilo debil,42,rotura
+20260922,REURDIDORA # 06,Hilo suelto,37,rotura
+20260922,REURDIDORA # 06,Revientes en peine,37,rotura
+20260922,REURDIDORA # 06,Transferencias,31,rotura
+20260922,REURDIDORA # 06,Hilos cruzados,28,rotura
+20260922,REURDIDORA # 06,Hilos rotos o picados,25,rotura
+20260922,REURDIDORA # 06,Descruce de hilo,16,rotura
+20260922,REURDIDORA # 06,Enredos de cintas,14,rotura
+20260922,REURDIDORA # 06,Mona o motas,7,rotura
+20260922,REURDIDORA # 06,Enredo de cinta,41,paro
+20260922,REURDIDORA # 06,Calzas,29,paro
+20260922,REURDIDORA # 07,Hilo suelto,32,rotura
+20260922,REURDIDORA # 07,Hilo debil,14,rotura
+20260922,REURDIDORA # 07,Revientes en peine,14,rotura
+20260922,REURDIDORA # 07,Hilos rotos o picados,13,rotura
+20260922,REURDIDORA # 07,Transferencias,9,rotura
+20260922,REURDIDORA # 07,Enredos de cintas,7,rotura
+20260922,REURDIDORA # 07,Hilos cruzados,5,rotura
+20260922,REURDIDORA # 07,Calzas,37,paro
+20260922,REURDIDORA # 07,Enredo de cinta,15,paro
