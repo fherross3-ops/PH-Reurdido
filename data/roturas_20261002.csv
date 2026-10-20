@@ -1,8 +1,8 @@
 ﻿fecha,maquina,tipo_rotura,cantidad,categoria
 20261002,REURDIDORA # 06,Transferencias,6,rotura
 20261002,REURDIDORA # 06,Nudo flojo,2,rotura
+20261002,REURDIDORA # 06,Hilos sobrantes,1,rotura
 20261002,REURDIDORA # 06,Revientes en peine,1,rotura
 20261002,REURDIDORA # 06,Hilo debil,1,rotura
 20261002,REURDIDORA # 06,Enredos de cintas,1,rotura
-20261002,REURDIDORA # 06,Hilos sobrantes,1,rotura
 20261002,REURDIDORA # 06,Enredo de cinta,1,paro
