@@ -1,8 +1,8 @@
 ﻿fecha,maquina,tipo_rotura,cantidad,categoria
 20261015,REURDIDORA # 05,Revientes en peine,25,rotura
 20261015,REURDIDORA # 05,Hilo suelto,9,rotura
-20261015,REURDIDORA # 05,Hilos rotos o picados,6,rotura
 20261015,REURDIDORA # 05,Hilos cruzados,6,rotura
+20261015,REURDIDORA # 05,Hilos rotos o picados,6,rotura
 20261015,REURDIDORA # 05,Hilo debil,5,rotura
 20261015,REURDIDORA # 05,Enredos de cintas,3,rotura
 20261015,REURDIDORA # 05,Transferencias,2,rotura
