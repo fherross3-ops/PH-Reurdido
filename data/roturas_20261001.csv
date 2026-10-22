@@ -5,8 +5,8 @@
 20261001,REURDIDORA # 05,Hilo suelto,23,rotura
 20261001,REURDIDORA # 05,Descruce de hilo,21,rotura
 20261001,REURDIDORA # 05,Nudo flojo,10,rotura
-20261001,REURDIDORA # 05,Hilos cruzados,6,rotura
 20261001,REURDIDORA # 05,Enredos de cintas,6,rotura
+20261001,REURDIDORA # 05,Hilos cruzados,6,rotura
 20261001,REURDIDORA # 05,Hilo debil,2,rotura
 20261001,REURDIDORA # 05,Calzas,54,paro
 20261001,REURDIDORA # 05,Enredo de cinta,42,paro
@@ -28,7 +28,7 @@
 20261001,REURDIDORA # 07,Hilos rotos o picados,12,rotura
 20261001,REURDIDORA # 07,Hilos cruzados,11,rotura
 20261001,REURDIDORA # 07,Nudo flojo,4,rotura
-20261001,REURDIDORA # 07,Mona o motas,2,rotura
 20261001,REURDIDORA # 07,Enredos de cintas,2,rotura
+20261001,REURDIDORA # 07,Mona o motas,2,rotura
 20261001,REURDIDORA # 07,Calzas,32,paro
 20261001,REURDIDORA # 07,Enredo de cinta,27,paro
