@@ -1,0 +1,40 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20261028,REURDIDORA # 03,Hilo debil,20,rotura
+20261028,REURDIDORA # 03,Revientes en peine,8,rotura
+20261028,REURDIDORA # 03,Transferencias,6,rotura
+20261028,REURDIDORA # 03,Hilos cruzados,3,rotura
+20261028,REURDIDORA # 03,Hilos rotos o picados,2,rotura
+20261028,REURDIDORA # 03,Hilo suelto,2,rotura
+20261028,REURDIDORA # 03,Mona o motas,1,rotura
+20261028,REURDIDORA # 03,Enredos de cintas,1,rotura
+20261028,REURDIDORA # 03,Enredo de cinta,17,paro
+20261028,REURDIDORA # 03,Calzas,2,paro
+20261028,REURDIDORA # 05,Hilo debil,53,rotura
+20261028,REURDIDORA # 05,Revientes en peine,23,rotura
+20261028,REURDIDORA # 05,Hilos rotos o picados,21,rotura
+20261028,REURDIDORA # 05,Transferencias,15,rotura
+20261028,REURDIDORA # 05,Hilos cruzados,11,rotura
+20261028,REURDIDORA # 05,Hilo suelto,10,rotura
+20261028,REURDIDORA # 05,Enredos de cintas,2,rotura
+20261028,REURDIDORA # 05,Mona o motas,1,rotura
+20261028,REURDIDORA # 05,Enredo de cinta,40,paro
+20261028,REURDIDORA # 05,Calzas,24,paro
+20261028,REURDIDORA # 06,Revientes en peine,33,rotura
+20261028,REURDIDORA # 06,Transferencias,25,rotura
+20261028,REURDIDORA # 06,Enredos de cintas,14,rotura
+20261028,REURDIDORA # 06,Hilo debil,14,rotura
+20261028,REURDIDORA # 06,Hilos rotos o picados,12,rotura
+20261028,REURDIDORA # 06,Hilos cruzados,7,rotura
+20261028,REURDIDORA # 06,Hilo suelto,6,rotura
+20261028,REURDIDORA # 06,Nudo flojo,1,rotura
+20261028,REURDIDORA # 06,Enredo de cinta,60,paro
+20261028,REURDIDORA # 06,Calzas,22,paro
+20261028,REURDIDORA # 07,Revientes en peine,41,rotura
+20261028,REURDIDORA # 07,Hilo debil,31,rotura
+20261028,REURDIDORA # 07,Transferencias,23,rotura
+20261028,REURDIDORA # 07,Hilos rotos o picados,18,rotura
+20261028,REURDIDORA # 07,Hilo suelto,7,rotura
+20261028,REURDIDORA # 07,Hilos cruzados,3,rotura
+20261028,REURDIDORA # 07,Enredos de cintas,2,rotura
+20261028,REURDIDORA # 07,Enredo de cinta,29,paro
+20261028,REURDIDORA # 07,Calzas,14,paro
