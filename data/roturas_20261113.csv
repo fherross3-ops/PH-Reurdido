@@ -1,0 +1,5 @@
+﻿fecha,maquina,tipo_rotura,cantidad,categoria
+20261113,REURDIDORA # 03,Hilo debil,5,rotura
+20261113,REURDIDORA # 03,Revientes en peine,2,rotura
+20261113,REURDIDORA # 03,Transferencias,2,rotura
+20261113,REURDIDORA # 03,Enredo de cinta,3,paro
